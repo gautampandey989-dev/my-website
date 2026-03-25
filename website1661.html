@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arduino Uno Learning</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: linear-gradient(to right, #020617, #0f172a);
+            color: white;
+        }
+
+        nav {
+            background: #1e293b;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #38bdf8;
+            margin: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        section {
+            display: none;
+            padding: 50px;
+            animation: fade 0.8s;
+        }
+
+        @keyframes fade {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        h1, h2 {
+            color: #38bdf8;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px #38bdf8;
+        }
+
+        img {
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        /* ROBOT ANIMATION */
+        .robot {
+            width: 80px;
+            height: 50px;
+            background: #38bdf8;
+            position: relative;
+            border-radius: 10px;
+            animation: moveRobot 5s infinite alternate;
+        }
+
+        .wheel {
+            width: 20px;
+            height: 20px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -10px;
+            animation: spin 1s linear infinite;
+        }
+
+        .wheel.left { left: 5px; }
+        .wheel.right { right: 5px; }
+
+        @keyframes moveRobot {
+            from { left: 0; }
+            to { left: 80%; }
+        }
+
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+
+        button {
+            background: #38bdf8;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 10px;
+        }
+
+        pre {
+            background: black;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+
+    <script>
+        function showPage(page) {
+            document.querySelectorAll("section").forEach(s => s.style.display = "none");
+            document.getElementById(page).style.display = "block";
+        }
+
+        function generateCode() {
+            let val = document.getElementById("search").value.toLowerCase();
+            let out = document.getElementById("output");
+
+            if (val === "obstacle") {
+                out.innerText = `// FULL OBSTACLE AVOIDING ROBOT CODE
+
+int ENA = 5;
+int IN1 = 6;
+int IN2 = 7;
+int ENB = 9;
+int IN3 = 10;
+int IN4 = 11;
+
+int trig = 3;
+int echo = 4;
+
+long duration;
+int distance;
+
+void setup() {
+    pinMode(ENA, OUTPUT);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    pinMode(ENB, OUTPUT);
+    pinMode(IN3, OUTPUT);
+    pinMode(IN4, OUTPUT);
+
+    pinMode(trig, OUTPUT);
+    pinMode(echo, INPUT);
+}
+
+void forward() {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+}
+
+void stopMotor() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, LOW);
+}
+
+void turnRight() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+}
+
+void loop() {
+    digitalWrite(trig, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trig, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig, LOW);
+
+    duration = pulseIn(echo, HIGH);
+    distance = duration * 0.034 / 2;
+
+    if (distance < 20) {
+        stopMotor();
+        delay(300);
+        turnRight();
+        delay(600);
+    } else {
+        forward();
+    }
+}`;
+            } else {
+                out.innerText = "Type: obstacle";
+            }
+        }
+
+        window.onload = () => showPage('home');
+    </script>
+
+</head>
+
+<body>
+
+<nav>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('connections')">Connections</a>
+    <a onclick="showPage('project')">Project</a>
+    <a onclick="showPage('code')">Code</a>
+</nav>
+
+<section id="home">
+    <h1>Arduino Uno Complete Guide</h1>
+
+    <div class="card">
+        <h2>Definition</h2>
+        <p>Arduino Uno is a microcontroller board based on ATmega328P used to control electronic devices and build interactive projects.</p>
+    </div>
+
+    <div class="card">
+        <h2>Functions</h2>
+        <p>
+        Arduino reads input from sensors, processes the data, and controls outputs like motors, LEDs, and displays. It acts as the "brain" of the system.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Uses</h2>
+        <p>
+        Arduino is widely used in robotics, automation, smart homes, IoT systems, and school projects. It helps in learning programming and electronics easily.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Arduino Board</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg">
+    </div>
+</section>
+
+<section id="connections">
+    <h1>Connections</h1>
+
+    <div class="card">
+        <h2>Ultrasonic Sensor</h2>
+        <p>Used to measure distance using sound waves.</p>
+        <ul>
+            <li>VCC → 5V</li>
+            <li>GND → GND</li>
+            <li>Trig → Pin 3</li>
+            <li>Echo → Pin 4</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Motor Driver</h2>
+        <p>Controls direction and speed of motors.</p>
+    </div>
+</section>
+
+<section id="project">
+    <h1>Robot Simulation</h1>
+
+    <div class="card">
+        <p>This robot moves and avoids obstacles automatically.</p>
+
+        <div class="robot">
+            <div class="wheel left"></div>
+            <div class="wheel right"></div>
+        </div>
+    </div>
+</section>
+
+<section id="code">
+    <h1>Code Generator</h1>
+
+    <div class="card">
+        <input id="search" placeholder="type obstacle">
+        <button onclick="generateCode()">Search</button>
+    </div>
+
+    <pre id="output"></pre>
+</section>
+
+</body>
+</html>
